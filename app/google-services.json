@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "645536221556",
+    "firebase_url": "https://graduation-work-f11f8-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "graduation-work-f11f8",
+    "storage_bucket": "graduation-work-f11f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645536221556:android:4ac3b722f7b06698d60421",
+        "android_client_info": {
+          "package_name": "com.example.graduationproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645536221556-80a1fr9ijfdisaa11oisuik7mquo0qee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNd6Zp0wMJkaFVEx4oFl6fO_DbEETJR_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645536221556-80a1fr9ijfdisaa11oisuik7mquo0qee.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
