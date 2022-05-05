@@ -1,4 +1,4 @@
-package com.example.graduationproject.ui
+package com.example.graduationproject.ui.intro
 
 import androidx.lifecycle.ViewModel
 
