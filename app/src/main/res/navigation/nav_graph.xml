@@ -9,5 +9,14 @@
         android:id="@+id/introFragment"
         android:name="com.example.graduationproject.ui.intro.IntroFragment"
         android:label="intro_fragment"
-        tools:layout="@layout/intro_fragment" />
+        tools:layout="@layout/intro_fragment" >
+        <action
+            android:id="@+id/action_introFragment_to_couriersListFragment"
+            app:destination="@id/couriersListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/couriersListFragment"
+        android:name="com.example.graduationproject.ui.couriers.CouriersListFragment"
+        android:label="couriers_list_fragment"
+        tools:layout="@layout/couriers_list_fragment" />
 </navigation>

@@ -1,7 +1,10 @@
 package com.example.graduationproject.components.FirebaseRDBService
 
 import com.example.graduationproject.model.Courier
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class FirebaseRDBService() {
 
@@ -32,10 +35,12 @@ class FirebaseRDBService() {
         couriers.child(key).get().addOnSuccessListener {
             if(it.exists()) {
                 val courier = Courier(
-                    _name = it.child("name").value.toString(),
-                    _lastName = it.child("last_name").value.toString(),
-                    _password = it.child("password").value.toString(),
-                    _login = key
+                    name = it.child("name").value.toString(),
+                    lastName = it.child("last_name").value.toString(),
+                    password = it.child("password").value.toString(),
+                    login = key,
+                    rate = it.child("rate").toString(),
+                    age = it.child("age").toString()
                 )
                 callback.onSuccessResponse(courier)
             } else {
@@ -43,6 +48,34 @@ class FirebaseRDBService() {
             }
         }
     }
+
+    fun fetchCouriers(callback: FetchCouriers) : ArrayList<Courier> {
+        val arrayOfCouriers = ArrayList<Courier>()
+        val couriersReference = database.getReference("couriers")
+        couriersReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()) {
+                    for (courierSnapshot in snapshot.children) {
+                        if (courierSnapshot.hasChild("lastElement")) {
+                            callback.onSuccessResponse(arrayOfCouriers)
+                        } else {
+                            val courier = courierSnapshot.getValue(Courier::class.java)
+                            courier?.let {
+                                arrayOfCouriers.add(courier)
+                            }
+                        }
+                    }
+                }
+             }
+             override fun onCancelled(error: DatabaseError) {}
+         })
+        return arrayOfCouriers
+    }
+}
+
+interface FetchCouriers {
+    fun onSuccessResponse(arrayList: ArrayList<Courier>)
+    fun onFailureResponse()
 }
 
 interface FetchUserCallback {

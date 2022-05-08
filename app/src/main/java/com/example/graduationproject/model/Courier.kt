@@ -1,13 +1,11 @@
 package com.example.graduationproject.model
 
-class Courier(
-    _name: String,
-    _lastName: String,
-    _login: String,
-    _password: String
-) {
-    val name = _name
-    var lastName = _lastName
-    var login = _login
-    var password = _password
-}
+data class Courier(
+    var name: String? = null,
+    var lastName: String? = null,
+    var login: String? = null,
+    var password: String? = null,
+    var rate: String? = null,
+    var age: String? = null,
+    var imageUrl: String? = null
+)
