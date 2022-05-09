@@ -34,9 +34,7 @@ class CourierListAdapter(
                 parent,
                 false
             )
-        itemView.setOnClickListener {
-            callback.onClickListener()
-        }
+
         return CourierViewHolder(itemView)
     }
 

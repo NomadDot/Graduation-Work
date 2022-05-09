@@ -1,5 +1,6 @@
 package com.example.graduationproject.ui.intro
 
+import android.Manifest
 import android.app.ProgressDialog
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -61,7 +62,7 @@ class IntroFragment : Fragment() {
                             ).show()
                             dialog.dismiss()
 
-                            findNavController().navigate(R.id.action_introFragment_to_couriersListFragment)
+                            findNavController().navigate(R.id.action_introFragment_to_mapFragment)
                         } else {
                             Toast.makeText(
                                 requireContext(),
@@ -90,6 +91,12 @@ class IntroFragment : Fragment() {
         viewModel = ViewModelProvider(this)[IntroViewModel::class.java]
         initView()
         configureAuthButton()
+
+        requireActivity().requestPermissions(
+            arrayOf(
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.READ_EXTERNAL_STORAGE,), 0)
     }
 
     fun test() {

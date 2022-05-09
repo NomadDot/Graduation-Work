@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_introFragment_to_couriersListFragment"
             app:destination="@id/couriersListFragment" />
+        <action
+            android:id="@+id/action_introFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/couriersListFragment"
         android:name="com.example.graduationproject.ui.couriers.CouriersListFragment"
         android:label="couriers_list_fragment"
         tools:layout="@layout/couriers_list_fragment" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.graduationproject.ui.MapFragment"
+        android:label="map_fragment"
+        tools:layout="@layout/map_fragment" />
 </navigation>

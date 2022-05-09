@@ -1,6 +1,7 @@
 package com.example.graduationproject.components.FirebaseRDBService
 
 import com.example.graduationproject.model.Courier
+import com.example.graduationproject.model.Order
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -49,7 +50,7 @@ class FirebaseRDBService() {
         }
     }
 
-    fun fetchCouriers(callback: FetchCouriers) : ArrayList<Courier> {
+    fun fetchCouriers(callback: FetchCouriers)  {
         val arrayOfCouriers = ArrayList<Courier>()
         val couriersReference = database.getReference("couriers")
         couriersReference.addValueEventListener(object : ValueEventListener {
@@ -69,7 +70,26 @@ class FirebaseRDBService() {
              }
              override fun onCancelled(error: DatabaseError) {}
          })
-        return arrayOfCouriers
+    }
+
+    fun fetchCurrentOrder(orderNumber: String, callback: (ArrayList<Order>) -> Unit)  {
+        val arrayOfOrders = ArrayList<Order>()
+        val ordersReference = database.getReference("orders")
+        ordersReference.addValueEventListener(object :  ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()) {
+                    callback.invoke(arrayOfOrders)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    fun fetchAllOrders() {
+
     }
 }
 

@@ -7,5 +7,6 @@ data class Courier(
     var password: String? = null,
     var rate: String? = null,
     var age: String? = null,
-    var imageUrl: String? = null
+    var imageUrl: String? = null,
+    var order: String? = null
 )
