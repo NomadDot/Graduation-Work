@@ -14,8 +14,8 @@
             android:id="@+id/action_introFragment_to_couriersListFragment"
             app:destination="@id/couriersListFragment" />
         <action
-            android:id="@+id/action_introFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
+            android:id="@+id/action_introFragment_to_orderListFragment"
+            app:destination="@id/orderListFragment" />
     </fragment>
     <fragment
         android:id="@+id/couriersListFragment"
@@ -27,4 +27,13 @@
         android:name="com.example.graduationproject.ui.MapFragment"
         android:label="map_fragment"
         tools:layout="@layout/map_fragment" />
+    <fragment
+        android:id="@+id/orderListFragment"
+        android:name="com.example.graduationproject.ui.orders.OrderListFragment"
+        android:label="fragment_order_list"
+        tools:layout="@layout/fragment_order_list" >
+        <action
+            android:id="@+id/action_orderListFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
 </navigation>

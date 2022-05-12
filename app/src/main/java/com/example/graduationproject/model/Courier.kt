@@ -8,5 +8,12 @@ data class Courier(
     var rate: String? = null,
     var age: String? = null,
     var imageUrl: String? = null,
-    var order: String? = null
-)
+    var order: String? = null,
+    var lat: String? = null,
+    var long: String? = null
+) {
+    data class Location(
+        var lat: String? = null,
+        var long: String? = null,
+    )
+}

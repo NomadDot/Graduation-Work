@@ -1,5 +1,6 @@
 package com.example.graduationproject.components.FirebaseRDBService
 
+import android.util.Log
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
 import com.google.firebase.database.DataSnapshot
@@ -19,17 +20,6 @@ class FirebaseRDBService() {
         database = FirebaseDatabase.getInstance()
     }
 
-    fun fetchCourierFromDatabase(key: String, callback : FetchUserCallback) {
-        val data = database.getReference("couriers")
-        data.child(key).get().addOnSuccessListener {
-            if (it.exists()) {
-
-            } else {
-                callback.onFailureResponse()
-            }
-        }
-    }
-
     fun authenticateUser(key: String, callback: FetchUserCallback) {
         val couriers = database.getReference("couriers")
 
@@ -41,7 +31,8 @@ class FirebaseRDBService() {
                     password = it.child("password").value.toString(),
                     login = key,
                     rate = it.child("rate").toString(),
-                    age = it.child("age").toString()
+                    age = it.child("age").toString(),
+                    lat = it.child("location").child("lat").toString()
                 )
                 callback.onSuccessResponse(courier)
             } else {
@@ -72,24 +63,45 @@ class FirebaseRDBService() {
          })
     }
 
-    fun fetchCurrentOrder(orderNumber: String, callback: (ArrayList<Order>) -> Unit)  {
+    fun setCourierOrder(orderNumber: String, courierId: String) {
+        database.getReference("couriers").child(courierId).child("order").setValue(orderNumber)
+    }
+
+
+    fun fetchAllOrders(callback: (ArrayList<Order>) -> Unit)  {
         val arrayOfOrders = ArrayList<Order>()
         val ordersReference = database.getReference("orders")
         ordersReference.addValueEventListener(object :  ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()) {
-                    callback.invoke(arrayOfOrders)
+                    for (orderSnapshot in snapshot.children) {
+                        val order = orderSnapshot.getValue(Order::class.java)
+                        arrayOfOrders.add(order!!)
+                        callback.invoke(arrayOfOrders)
+                        Log.i("MyTag", order.toString())
+                    }
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
+            override fun onCancelled(error: DatabaseError) {}
         })
     }
 
-    fun fetchAllOrders() {
-
+    fun fetchCurrentOrder(orderNumber: String, callback: (Order?) -> Unit) {
+        val ordersReference = database.getReference("orders")
+        ordersReference.addValueEventListener(object :  ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()) {
+                    for (orderSnapshot in snapshot.children) {
+                        if (orderSnapshot.key == orderNumber) {
+                            val order = orderSnapshot.getValue(Order::class.java)
+                            callback.invoke(order)
+                            Log.i("MyTag", order.toString())
+                        }
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 }
 

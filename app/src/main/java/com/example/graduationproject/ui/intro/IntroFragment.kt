@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.ProgressDialog
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +16,6 @@ import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FetchUserCallback
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
 import com.example.graduationproject.model.Courier
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class IntroFragment : Fragment() {
 
@@ -39,14 +36,14 @@ class IntroFragment : Fragment() {
         return inflater.inflate(R.layout.intro_fragment, container, false)
     }
 
-    fun initView() {
+    private fun initView() {
         btnAuth = requireView().findViewById(R.id.btnAuth)
         etLogin = requireView().findViewById(R.id.etLogin)
         etPassword = requireView().findViewById(R.id.etPassword)
         test()
     }
 
-    fun configureAuthButton() {
+    private fun configureAuthButton() {
         btnAuth.setOnClickListener {
             val dialog = ProgressDialog.show(requireContext(), "Authorization", "Loading ...")
 
@@ -55,14 +52,27 @@ class IntroFragment : Fragment() {
                 object : FetchUserCallback {
                     override fun onSuccessResponse(courier: Courier) {
                         if (etPassword.text.toString() == courier.password) {
-                            Toast.makeText(
-                                    requireContext(),
-                            "You've been successfully authorized.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            dialog.dismiss()
+                            if (courier.password == "admin") {
 
-                            findNavController().navigate(R.id.action_introFragment_to_mapFragment)
+                                Toast.makeText(
+                                    requireContext(),
+                                    "You've been successfully authorized.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dialog.dismiss()
+
+                                findNavController().navigate(R.id.action_introFragment_to_couriersListFragment)
+                            } else {
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    "You've been successfully authorized.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dialog.dismiss()
+
+                                findNavController().navigate(R.id.action_introFragment_to_orderListFragment)
+                            }
                         } else {
                             Toast.makeText(
                                 requireContext(),
@@ -86,6 +96,7 @@ class IntroFragment : Fragment() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)[IntroViewModel::class.java]
@@ -99,7 +110,7 @@ class IntroFragment : Fragment() {
                 Manifest.permission.READ_EXTERNAL_STORAGE,), 0)
     }
 
-    fun test() {
+    private fun test() {
         etLogin.setText("rmnvlshn123")
         etPassword.setText("123")
     }

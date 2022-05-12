@@ -2,10 +2,8 @@ package com.example.graduationproject.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,17 +11,18 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.graduationproject.R
-import com.example.graduationproject.components.location_utils.LocationService
-import com.example.graduationproject.components.location_utils.ResponseLocationCallback
+import com.example.graduationproject.components.location_utils.*
+import com.example.graduationproject.model.DirectionResponses
+import com.example.graduationproject.model.Order
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import java.io.IOException
-import java.util.*
-
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.PolyUtil
+import retrofit2.Response
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -36,6 +35,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var map: GoogleMap? = null
     lateinit var mapView: MapView
     private val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
+    private var testLocation: LatLng? = null
+    private var currentOrder: Order? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,8 +56,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         mapView.onCreate(mapViewBundle)
+
+        currentOrder = arguments?.getParcelable("CURRENT_ORDER")
+
         mapView.getMapAsync(this)
     }
+
+
 
     private fun initView() {
         mapView = requireView().findViewById(R.id.mainMap)
@@ -65,7 +71,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mapView.onResume()
         map = googleMap
-
 
         map?.let {
             if (ActivityCompat.checkSelfPermission(
@@ -81,55 +86,53 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             it.isMyLocationEnabled = true
         }
 
+        // to show current location
         LocationService(
             requireContext(),
             requireActivity()
         ).fetchLocation(object : ResponseLocationCallback {
             override fun onSuccessLocationCallback(lastLocation: LocationService.Coordinates2D) {
-                val currentLocation = LatLng(lastLocation.latitude, lastLocation.longitude)
+
+                val currentLocationLatLong = LatLng(currentOrder!!.latFrom!!.toDouble(), currentOrder!!.longFrom!!.toDouble())
+                val destinationLocationLatLong =  LatLng(currentOrder!!.latTo!!.toDouble(),currentOrder!!.longTo!!.toDouble())
+
                 map?.let {
-                    it.addMarker(MarkerOptions().position(currentLocation).title("Current location"))
-                    it.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-                    it.animateCamera(CameraUpdateFactory.newLatLng(currentLocation))
-                    val list = useGeocoder(lastLocation)
+                    it.addMarker(MarkerOptions().position(currentLocationLatLong).title("Place from"))
+                    it.addMarker(MarkerOptions().position(destinationLocationLatLong).title(currentOrder!!.orderNumber))
+                    it.moveCamera(CameraUpdateFactory.newLatLng(currentLocationLatLong))
 
-                    list?.get(0)?.let { it1 -> Log.i("MyLocationtag", it1.thoroughfare) }
+                    var originLocation = "${currentOrder!!.latFrom},${currentOrder!!.longFrom}"
+                    var destinationLocation = "${currentOrder!!.latTo},${currentOrder!!.longTo}"
 
-                    Log.i("MyLocationtag", getLocationFromAddress("Забрідь, вул. Миру, 17").toString())
-                    val testLocation = getLocationFromAddress("Zabrid")
-                    it.addMarker(MarkerOptions().position(testLocation!!).title("Test location"))
+                    GoogleDirectionAPI.fetchRoute(
+                        originLocation,
+                        destinationLocation,
+                        requireContext()) {
+                        drawPolyline(it)
+                    }
                 }
             }
-
             override fun onFailureLocationCallback() {}
         })
     }
 
-    fun useGeocoder(location: LocationService.Coordinates2D): MutableList<Address>? {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        return geocoder.getFromLocation(location.latitude, location.longitude, 1)
-    }
+    private fun drawPolyline(response: Response<DirectionResponses> ) {
 
-    fun getLocationFromAddress(strAddress: String?): LatLng? {
-        val coder = Geocoder(requireContext())
-        val address: List<Address>?
-        var p1: LatLng? = null
-        try {
-            address = coder.getFromLocationName(strAddress, 5)
-            if (address == null) {
-                return null
+        val shape = response.body()?.routes?.get(0)?.overviewPolyline?.points
+
+        val polyline = PolylineOptions()
+            .addAll(PolyUtil.decode(shape))
+            .width(8f)
+            .color(Color.RED)
+            .geodesic(true)
+            .clickable(true)
+
+        map?.let {
+            it.setOnPolylineClickListener {
+                // TODO: Distance of polyline
             }
-            val location = address[0]
-            location.latitude
-            location.longitude
-            p1 = LatLng(
-                (location.latitude * 1E6),
-                (location.longitude * 1E6)
-            )
-            return p1
-        } catch (e: IOException) {
-            e.printStackTrace()
+            it.addPolyline(polyline)
         }
-        return null
+
     }
 }
