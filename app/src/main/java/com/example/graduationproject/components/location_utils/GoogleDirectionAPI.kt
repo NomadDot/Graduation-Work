@@ -1,9 +1,14 @@
 package com.example.graduationproject.components.location_utils
 
 import android.content.Context
+import android.graphics.Color
+import android.location.Location
 import android.util.Log
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.DirectionResponses
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.PolyUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,6 +40,21 @@ class GoogleDirectionAPI {
                         t.localizedMessage?.let { Log.i("error", it) }
                     }
                 })
+        }
+        fun drawPolyline(response: Response<DirectionResponses>, map: GoogleMap) {
+
+            val shape = response.body()?.routes?.get(0)?.overviewPolyline?.points
+
+            val polyline = PolylineOptions()
+                .addAll(PolyUtil.decode(shape))
+                .width(8f)
+                .color(Color.RED)
+                .geodesic(true)
+                .clickable(true)
+
+            map.let {
+                it.addPolyline(polyline)
+            }
         }
     }
 

@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Couriers list"
+            android:text="Список кур'єрів"
             android:gravity="center"
             android:textSize="20dp"
             android:textColor="@color/black"
@@ -30,8 +30,8 @@
         android:background="@color/black"
         />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewOfCouriers"
+    <ListView
+        android:id="@+id/listViewOfCouriers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

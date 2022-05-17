@@ -6,12 +6,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.intro.IntroFragment">
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_rawRes="@raw/location"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        />
+
+    <TextView
+        android:id="@+id/tvGraduationProject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Graduation Project"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:fontFamily="@font/inter_bold"
+        app:layout_constraintTop_toBottomOf="@id/animation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Location monitoring service"
+        android:gravity="center"
+        android:textSize="18dp"
+        android:fontFamily="@font/inter_bold"
+        app:layout_constraintTop_toBottomOf="@id/tvGraduationProject"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <EditText
         android:id="@+id/etLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Login"
         android:gravity="center"
+        android:background="@drawable/input_field"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,6 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
+        android:background="@drawable/input_field"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/etLogin"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,8 +72,21 @@
     <Button
         android:id="@+id/btnAuth"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign In"
+        android:layout_height="60dp"
+        android:text="Увійти"
+        android:backgroundTint="@color/main_theme"
+        app:layout_constraintBottom_toTopOf="@id/btnRegister"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="15dp"/>
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Зареєструватися"
+        android:backgroundTint="@color/main_theme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

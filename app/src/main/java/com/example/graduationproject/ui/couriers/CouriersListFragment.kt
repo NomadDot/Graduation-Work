@@ -5,17 +5,17 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FetchCouriers
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
+import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.Courier
-import com.example.graduationproject.ui_components.CourierListAdapter
 import com.example.graduationproject.ui_components.OnCourierItemClick
 
 class CouriersListFragment : Fragment(){
@@ -23,8 +23,7 @@ class CouriersListFragment : Fragment(){
     companion object {
         fun newInstance() = CouriersListFragment()
     }
-    private lateinit var callback: OnCourierItemClick
-    private lateinit var rvListOfCouriers: RecyclerView
+    private lateinit var rvListOfCouriers: ListView
     private lateinit var dialog: ProgressDialog
     private lateinit var viewModel: CouriersListViewModel
 
@@ -39,29 +38,35 @@ class CouriersListFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)[CouriersListViewModel::class.java]
         dialog = ProgressDialog.show(requireContext(), "Fetching couriers list", "Loading ...")
-        configureRecyclerView()
+        rvListOfCouriers = requireView().findViewById(R.id.listViewOfCouriers)
+
         fetchCouriers()
-    }
-
-    private fun configureRecyclerView() {
-        callback = object : OnCourierItemClick {
-            override fun onClickListener(position: Int) {
-                Toast.makeText(requireContext(), position.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        rvListOfCouriers = requireView().findViewById(R.id.recyclerViewOfCouriers)
-        rvListOfCouriers.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun fetchCouriers() {
         FirebaseRDBService.executor.fetchCouriers(object : FetchCouriers {
             override fun onSuccessResponse(arrayList: ArrayList<Courier>) {
-                rvListOfCouriers.adapter = CourierListAdapter(listOfCouriers = arrayList, callback)
+
+                rvListOfCouriers.adapter = CourierListAdapter(requireContext(), arrayList)
+
+                rvListOfCouriers.setOnItemClickListener { adapterView, view, i, l ->
+                    if(arrayList[i].order != "null") {
+                        val currentCourier = arrayList[i]
+                        val bundleCurrentCourier = bundleOf(Constants.CURRENT_COURIER to currentCourier)
+                        findNavController().navigate(R.id.action_couriersListFragment_to_courierMapFragment, bundleCurrentCourier)
+                    } else {
+                        Toast.makeText(requireContext(), "Кур'єр нічого не доставляє", Toast.LENGTH_LONG).show()
+                    }
+
+                }
                 dialog.dismiss()
             }
 
             override fun onFailureResponse() {}
         })
+    }
+
+    private fun configureMonitoringButton() {
+
     }
 }

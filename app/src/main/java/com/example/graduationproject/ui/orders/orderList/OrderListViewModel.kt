@@ -1,4 +1,4 @@
-package com.example.graduationproject.ui.orders
+package com.example.graduationproject.ui.orders.orderList
 
 import androidx.lifecycle.ViewModel
 

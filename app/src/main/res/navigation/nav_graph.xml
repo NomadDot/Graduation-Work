@@ -12,28 +12,72 @@
         tools:layout="@layout/intro_fragment" >
         <action
             android:id="@+id/action_introFragment_to_couriersListFragment"
-            app:destination="@id/couriersListFragment" />
+            app:destination="@id/couriersListFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/action_introFragment_to_orderListFragment"
-            app:destination="@id/orderListFragment" />
+            app:destination="@id/orderListFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_introFragment_to_mapFragment"
+            app:destination="@id/mapFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_introFragment_to_registerCourierFragment"
+            app:destination="@id/registerCourierFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/couriersListFragment"
         android:name="com.example.graduationproject.ui.couriers.CouriersListFragment"
         android:label="couriers_list_fragment"
-        tools:layout="@layout/couriers_list_fragment" />
+        tools:layout="@layout/couriers_list_fragment" >
+        <action
+            android:id="@+id/action_couriersListFragment_to_courierMapFragment"
+            app:destination="@id/courierMapFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.graduationproject.ui.MapFragment"
+        android:name="com.example.graduationproject.ui.orders.orderMap.OrderMapFragment"
         android:label="map_fragment"
-        tools:layout="@layout/map_fragment" />
+        tools:layout="@layout/map_fragment" >
+        <action
+            android:id="@+id/action_mapFragment_to_orderListFragment"
+            app:destination="@id/orderListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/orderListFragment"
-        android:name="com.example.graduationproject.ui.orders.OrderListFragment"
+        android:name="com.example.graduationproject.ui.orders.orderList.OrderListFragment"
         android:label="fragment_order_list"
         tools:layout="@layout/fragment_order_list" >
         <action
             android:id="@+id/action_orderListFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
+            app:destination="@id/mapFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
+    <fragment
+        android:id="@+id/courierMapFragment"
+        android:name="com.example.graduationproject.ui.couriers.CourierMapFragment"
+        android:label="fragment_courier_map"
+        tools:layout="@layout/fragment_courier_map" />
+    <fragment
+        android:id="@+id/registerCourierFragment"
+        android:name="com.example.graduationproject.RegisterCourierFragment"
+        android:label="fragment_register_courier"
+        tools:layout="@layout/fragment_register_courier" />
 </navigation>

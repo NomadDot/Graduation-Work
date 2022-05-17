@@ -1,6 +1,5 @@
 package com.example.graduationproject.components.FirebaseRDBService
 
-import android.util.Log
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
 import com.google.firebase.database.DataSnapshot
@@ -27,12 +26,14 @@ class FirebaseRDBService() {
             if(it.exists()) {
                 val courier = Courier(
                     name = it.child("name").value.toString(),
-                    lastName = it.child("last_name").value.toString(),
+                    lastName = it.child("lastName").value.toString(),
                     password = it.child("password").value.toString(),
                     login = key,
-                    rate = it.child("rate").toString(),
-                    age = it.child("age").toString(),
-                    lat = it.child("location").child("lat").toString()
+                    rate = it.child("rate").value.toString(),
+                    age = it.child("age").value.toString(),
+                    order = it.child("order").value.toString(),
+                    currentLat = it.child("currentLat").value.toString(),
+                    currentLong = it.child("currentLong").value.toString()
                 )
                 callback.onSuccessResponse(courier)
             } else {
@@ -47,16 +48,18 @@ class FirebaseRDBService() {
         couriersReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()) {
-                    for (courierSnapshot in snapshot.children) {
-                        if (courierSnapshot.hasChild("lastElement")) {
-                            callback.onSuccessResponse(arrayOfCouriers)
-                        } else {
-                            val courier = courierSnapshot.getValue(Courier::class.java)
-                            courier?.let {
-                                arrayOfCouriers.add(courier)
+                        for (courierSnapshot in snapshot.children) {
+                            if(courierSnapshot.key != "admin") {
+                                if (courierSnapshot.hasChild("lastElement")) {
+                                    callback.onSuccessResponse(arrayOfCouriers)
+                                } else {
+                                    val courier = courierSnapshot.getValue(Courier::class.java)
+                                    courier?.let {
+                                        arrayOfCouriers.add(courier)
+                                    }
+                                }
                             }
                         }
-                    }
                 }
              }
              override fun onCancelled(error: DatabaseError) {}
@@ -67,6 +70,9 @@ class FirebaseRDBService() {
         database.getReference("couriers").child(courierId).child("order").setValue(orderNumber)
     }
 
+    fun discardCourierOrder(courierId: String) {
+        database.getReference("couriers").child(courierId).child("order").setValue("null")
+    }
 
     fun fetchAllOrders(callback: (ArrayList<Order>) -> Unit)  {
         val arrayOfOrders = ArrayList<Order>()
@@ -78,7 +84,6 @@ class FirebaseRDBService() {
                         val order = orderSnapshot.getValue(Order::class.java)
                         arrayOfOrders.add(order!!)
                         callback.invoke(arrayOfOrders)
-                        Log.i("MyTag", order.toString())
                     }
                 }
             }
@@ -92,16 +97,19 @@ class FirebaseRDBService() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()) {
                     for (orderSnapshot in snapshot.children) {
-                        if (orderSnapshot.key == orderNumber) {
+                        if (orderSnapshot.child("orderNumber").value == orderNumber) {
                             val order = orderSnapshot.getValue(Order::class.java)
                             callback.invoke(order)
-                            Log.i("MyTag", order.toString())
                         }
                     }
                 }
             }
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
+
+    fun insertUserValueToDatabase(courier: Courier) {
+
     }
 }
 

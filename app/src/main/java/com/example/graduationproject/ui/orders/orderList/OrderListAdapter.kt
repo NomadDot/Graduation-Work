@@ -1,4 +1,4 @@
-package com.example.graduationproject.ui.orders
+package com.example.graduationproject.ui.orders.orderList
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -45,9 +45,17 @@ class OrderListAdapter(
         tvOrigin.text = "${tvOrigin.text}${dataSource[position].placeFrom}"
         tvDestination.text = "${tvDestination.text}${dataSource[position].placeTo}"
 
-        btnChooseOrder.setOnClickListener {
-            onButtonCallback.configureMapForItem(dataSource[position])
+
+        if (dataSource[position].status == "processing") {
+            btnChooseOrder.isEnabled = false
+            btnChooseOrder.backgroundTintList = context.resources.getColorStateList(R.color.main_theme)
+            btnChooseOrder.text = "Виконується"
+        } else {
+            btnChooseOrder.setOnClickListener {
+                onButtonCallback.configureMapForItem(dataSource[position])
+            }
         }
+
 
         return orderItemView
     }
