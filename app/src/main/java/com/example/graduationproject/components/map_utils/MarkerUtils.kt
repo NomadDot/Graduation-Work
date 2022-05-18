@@ -1,4 +1,4 @@
-package com.example.graduationproject.components.mapUtils
+package com.example.graduationproject.components.map_utils
 
 import android.graphics.Color
 import com.google.android.gms.maps.model.BitmapDescriptor

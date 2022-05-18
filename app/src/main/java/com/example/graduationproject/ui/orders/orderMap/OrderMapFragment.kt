@@ -17,8 +17,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
 import com.example.graduationproject.components.location_utils.*
-import com.example.graduationproject.components.mapUtils.getMarkerIcon
-import com.example.graduationproject.components.mapUtils.zoom
+import com.example.graduationproject.components.map_utils.getMarkerIcon
+import com.example.graduationproject.components.map_utils.zoom
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
@@ -111,10 +111,10 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
                             FirebaseRDBService.executor.discardCourierOrder(courierId = currentCourier!!.login!!)
                             dialogDetails.dismiss()
                             val courierBundle = bundleOf(Constants.CURRENT_COURIER to currentCourier)
-                            findNavController().navigate(
-                                R.id.action_mapFragment_to_orderListFragment,
-                                courierBundle
-                            )
+//                            findNavController().navigate(
+//                                R.id.action_mapFragment_to_orderListFragment,
+//                                courierBundle
+//                            )
                         }
                         .build()
                         .getPopUpDialogView()

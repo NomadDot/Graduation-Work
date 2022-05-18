@@ -9,13 +9,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
 import com.example.graduationproject.model.Courier
 
 class RegisterCourierFragment : Fragment() {
 
     companion object {
-        val EMPTY_VALUE = null
+        val EMPTY_VALUE = ""
     }
 
     private lateinit var viewModel: RegisterCourierViewModel
@@ -38,7 +39,7 @@ class RegisterCourierFragment : Fragment() {
 
     fun initView() {
         btnRegister = requireView().findViewById(R.id.btnRegister)
-        etName = requireView().findViewById(R.id.etUsername)
+        etName = requireView().findViewById(R.id.etName)
         etLastName = requireView().findViewById(R.id.etLastName)
         etPhoneNumber = requireView().findViewById(R.id.etPhoneNumber)
         etAge = requireView().findViewById(R.id.etAge)
@@ -71,9 +72,11 @@ class RegisterCourierFragment : Fragment() {
                     age = courierValue.age,
                     phoneNumber = courierValue.phoneNumber,
                     login = courierValue.login,
-                    password = courierValue.password
+                    password = courierValue.password,
+                    order = courierValue.order
                 )
                 FirebaseRDBService.executor.insertUserValueToDatabase(courier)
+                findNavController().popBackStack()
             } else {
                 Toast.makeText(requireContext(), "Заповніть всі поля", Toast.LENGTH_SHORT).show()
             }
@@ -90,7 +93,6 @@ class RegisterCourierFragment : Fragment() {
             password = etPassword.text.toString()
         )
     }
-
 }
 
 data class CourierValues(
@@ -99,5 +101,6 @@ data class CourierValues(
     var age: String? = null,
     var phoneNumber: String? = null,
     var login: String? = null,
-    var password: String? = null
+    var password: String? = null,
+    var order: String = "null"
 )

@@ -59,7 +59,7 @@ class OrderListFragment : Fragment() {
                     FirebaseRDBService.executor.setCourierOrder(order.orderNumber.toString(), currentCourier!!.login!!)
                     val bundleObject = bundleOf(Constants.CURRENT_ORDER to order, Constants.CURRENT_COURIER to currentCourier)
 
-                    findNavController().navigate(R.id.action_orderListFragment_to_mapFragment, bundleObject)
+                        //findNavController().navigate(R.id.action_orderListFragment_to_mapFragment, bundleObject)
                 }
             })
 

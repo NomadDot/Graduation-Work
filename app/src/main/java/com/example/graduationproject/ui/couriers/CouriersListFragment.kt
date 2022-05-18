@@ -16,13 +16,9 @@ import com.example.graduationproject.components.FirebaseRDBService.FetchCouriers
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.Courier
-import com.example.graduationproject.ui_components.OnCourierItemClick
 
 class CouriersListFragment : Fragment(){
 
-    companion object {
-        fun newInstance() = CouriersListFragment()
-    }
     private lateinit var rvListOfCouriers: ListView
     private lateinit var dialog: ProgressDialog
     private lateinit var viewModel: CouriersListViewModel
@@ -53,11 +49,10 @@ class CouriersListFragment : Fragment(){
                     if(arrayList[i].order != "null") {
                         val currentCourier = arrayList[i]
                         val bundleCurrentCourier = bundleOf(Constants.CURRENT_COURIER to currentCourier)
-                        findNavController().navigate(R.id.action_couriersListFragment_to_courierMapFragment, bundleCurrentCourier)
+                        findNavController().navigate(R.id.action_couriersListFragment2_to_courierMapFragment, bundleCurrentCourier)
                     } else {
                         Toast.makeText(requireContext(), "Кур'єр нічого не доставляє", Toast.LENGTH_LONG).show()
                     }
-
                 }
                 dialog.dismiss()
             }

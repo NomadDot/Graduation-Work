@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/couriersListFragment2"
+        android:title="@string/couriers_list"
+        android:icon="@drawable/ic_baseline_format_list_bulleted_24"/>
+
+    <item
+        android:id="@+id/adminMapFragment2"
+        android:title="@string/map"
+        android:icon="@drawable/ic_baseline_map_24"/>
+
+    <item
+        android:id="@+id/profileFragment2"
+        android:title="@string/profile"
+        android:icon="@drawable/ic_baseline_person_24"/>
+</menu>

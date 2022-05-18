@@ -66,6 +66,27 @@ class FirebaseRDBService() {
          })
     }
 
+    fun fetchCurrentCourier(login: String, callback: (Courier?) -> Unit) {
+        val courierReference = database.getReference("couriers")
+
+        courierReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()) {
+                    for (courierSnapshot in snapshot.children) {
+                        if(courierSnapshot.key == login) {
+                           callback(courierSnapshot.getValue(Courier::class.java))
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
     fun setCourierOrder(orderNumber: String, courierId: String) {
         database.getReference("couriers").child(courierId).child("order").setValue(orderNumber)
     }
@@ -109,7 +130,9 @@ class FirebaseRDBService() {
     }
 
     fun insertUserValueToDatabase(courier: Courier) {
-
+        database.getReference("couriers")
+            .child(courier.login.toString())
+            .setValue(courier)
     }
 }
 

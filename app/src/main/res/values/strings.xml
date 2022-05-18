@@ -1,4 +1,18 @@
 <resources>
     <string name="app_name">Graduation Project</string>
     <string name="show_details">Деталі</string>
+    <string name="name">Ім\'я</string>
+    <string name="phoneNumber">Номер телефону</string>
+    <string name="age">Вік</string>
+    <string name="lastName">Фамілія</string>
+    <string name="login">Логін</string>
+    <string name="password">Пароль</string>
+    <string name="log_in">Увійти</string>
+    <string name="register">Зареєструватися</string>
+    <string name="couriers_list">Список кур\'єрів</string>
+    <string name="map">Загальна карта</string>
+    <string name="profile">Профіль</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="logout">Вийти з аккаунту</string>
 </resources>

@@ -7,17 +7,21 @@
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/drawable/round_corners.xml" value="0.151" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout-land/item_order.xml" value="0.225" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout-sw600dp/item_order.xml" value="0.2" />
-        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/activity_main.xml" value="0.23333333333333334" />
+        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/activity_main.xml" value="0.152" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/courier_data_sheet_dialog.xml" value="0.264" />
-        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/courier_item.xml" value="0.5486862442040186" />
+        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/courier_item.xml" value="0.4" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/couriers_list_fragment.xml" value="0.264" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/details_sheet_dialog.xml" value="0.264" />
+        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/fragment_admin_flow.xml" value="0.14065840102607952" />
+        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/fragment_admin_map.xml" value="0.19153484395040615" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/fragment_courier_map.xml" value="0.19153484395040615" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/fragment_order_list.xml" value="0.4" />
-        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/fragment_register_courier.xml" value="0.264" />
+        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/fragment_profile.xml" value="0.264" />
+        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/fragment_register_courier.xml" value="0.2" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/intro_fragment.xml" value="0.2" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/item_order.xml" value="0.2" />
         <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/layout/map_fragment.xml" value="0.23333333333333334" />
+        <entry key="..\:/androidprojects/GraduationProject/app/src/main/res/menu/menu_admin.xml" value="0.4" />
       </map>
     </option>
   </component>

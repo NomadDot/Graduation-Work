@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_admin_flow"
+    app:startDestination="@id/couriersListFragment2">
+
+    <fragment
+        android:id="@+id/couriersListFragment2"
+        android:name="com.example.graduationproject.ui.couriers.CouriersListFragment"
+        android:label="couriers_list_fragment"
+        tools:layout="@layout/couriers_list_fragment" >
+        <action
+            android:id="@+id/action_couriersListFragment2_to_adminMapFragment2"
+            app:destination="@id/adminMapFragment2" />
+        <action
+            android:id="@+id/action_couriersListFragment2_to_profileFragment2"
+            app:destination="@id/profileFragment2" />
+        <action
+            android:id="@+id/action_couriersListFragment2_to_courierMapFragment"
+            app:destination="@id/courierMapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminMapFragment2"
+        android:name="com.example.graduationproject.ui.AdminMapFragment"
+        android:label="fragment_admin_map"
+        tools:layout="@layout/fragment_admin_map" >
+        <action
+            android:id="@+id/action_adminMapFragment2_to_profileFragment2"
+            app:destination="@id/profileFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment2"
+        android:name="com.example.graduationproject.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/courierMapFragment"
+        android:name="com.example.graduationproject.ui.couriers.CourierMapFragment"
+        android:label="fragment_courier_map"
+        tools:layout="@layout/fragment_courier_map" />
+</navigation>

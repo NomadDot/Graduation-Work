@@ -2,7 +2,6 @@ package com.example.graduationproject.ui.couriers
 
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,8 @@ import androidx.fragment.app.Fragment
 import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
 import com.example.graduationproject.components.location_utils.GoogleDirectionAPI
-import com.example.graduationproject.components.mapUtils.getMarkerIcon
-import com.example.graduationproject.components.mapUtils.zoom
+import com.example.graduationproject.components.map_utils.getMarkerIcon
+import com.example.graduationproject.components.map_utils.zoom
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order

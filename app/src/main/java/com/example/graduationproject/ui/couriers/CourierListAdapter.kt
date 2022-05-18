@@ -1,5 +1,6 @@
 package com.example.graduationproject.ui.couriers
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,7 @@ class CourierListAdapter(
         return p0.toLong()
     }
 
+    @SuppressLint("SetTextI18n", "ViewHolder")
     override fun getView(position: Int, converterView: View?, parent: ViewGroup?): View {
         val courierItemView = inflater.inflate(R.layout.courier_item, parent, false)
 
@@ -39,11 +41,13 @@ class CourierListAdapter(
         val tvCourierAge = courierItemView.findViewById<TextView>(R.id.tvCourierAge)
         val tvCourierStatus = courierItemView.findViewById<TextView>(R.id.tvCourierStatusValue)
         val tvRate = courierItemView.findViewById<TextView>(R.id.tvCourierRateValue)
+        val tvPhoneNumber = courierItemView.findViewById<TextView>(R.id.tvPhoneNumber)
 
         tvCourierName.text = " ${dataSource[position].name} ${dataSource[position].lastName}"
         tvCourierAge.text = dataSource[position].age
         tvRate.text = dataSource[position].rate
         tvCourierStatus.text = ""
+        tvPhoneNumber.text = "${tvPhoneNumber.text}${dataSource[position].phoneNumber}"
 
         return courierItemView
     }
