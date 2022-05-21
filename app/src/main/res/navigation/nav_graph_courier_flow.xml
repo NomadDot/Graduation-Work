@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_courier_flow"
+    app:startDestination="@id/orderListFragment2">
+
+    <fragment
+        android:id="@+id/orderListFragment2"
+        android:name="com.example.graduationproject.ui.orders.orderList.OrderListFragment"
+        android:label="fragment_order_list"
+        tools:layout="@layout/fragment_order_list" >
+        <action
+            android:id="@+id/action_orderListFragment2_to_orderMapFragment"
+            app:destination="@id/orderMapFragment"
+            app:launchSingleTop="true"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_orderListFragment2_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.graduationproject.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/orderMapFragment"
+        android:name="com.example.graduationproject.ui.orders.orderMap.OrderMapFragment"
+        android:label="map_fragment"
+        tools:layout="@layout/map_fragment" >
+        <action
+            android:id="@+id/action_orderMapFragment_to_orderListFragment2"
+            app:destination="@id/orderListFragment2" />
+    </fragment>
+</navigation>

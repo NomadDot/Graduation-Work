@@ -1,4 +1,4 @@
-package com.example.graduationproject.components.location_utils
+package com.example.graduationproject.components.locationServices
 
 import android.Manifest
 import android.app.Activity
@@ -9,19 +9,7 @@ import android.location.LocationManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpEntity
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.HttpResponse
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.ClientProtocolException
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.HttpClient
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.methods.HttpPost
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.impl.client.DefaultHttpClient
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.IOException
-import java.io.InputStream
 
 
 class LocationService(

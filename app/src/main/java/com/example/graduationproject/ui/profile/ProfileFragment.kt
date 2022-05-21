@@ -9,9 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.navigation.fragment.findNavController
+import android.widget.TextView
+import androidx.fragment.app.findFragment
 import com.example.graduationproject.R
+import com.example.graduationproject.components.sharedResources.SharedResources
 import com.example.graduationproject.core.Constants
+import com.example.graduationproject.core.Constants.Companion.CURRENT_COURIER
+import com.example.graduationproject.model.Courier
 
 class ProfileFragment : Fragment() {
 
@@ -24,16 +28,24 @@ class ProfileFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
-    @SuppressLint("CommitPrefEdits")
+    @SuppressLint("CommitPrefEdits", "SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+
+        val courier = SharedResources.executor.getCourier()
+
+        val tvName = requireView().findViewById<TextView>(R.id.tvCourierName)
+        val tvAge = requireView().findViewById<TextView>(R.id.tvCourierAge)
+
+        tvName.text = "${courier!!.name} ${courier.lastName}"
+        tvAge.text = courier.age
+
         val btnLogout = requireView().findViewById<Button>(R.id.btnLogout)
         btnLogout.setOnClickListener {
             val preferences = requireContext().getSharedPreferences(Constants.USER_DATA_STORAGE, Context.MODE_PRIVATE)
             preferences.edit().clear().apply()
-            findNavController().popBackStack(R.id.introFragment, false)
+            requireActivity().finish()
         }
     }
-
 }

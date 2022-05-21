@@ -1,7 +1,6 @@
 package com.example.graduationproject.ui.orders.orderList
 
 import android.app.ProgressDialog
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,10 +11,12 @@ import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
+import com.example.graduationproject.components.sharedResources.SharedResources
 import com.example.graduationproject.core.Constants
+import com.example.graduationproject.core.Constants.Companion.CURRENT_COURIER
+import com.example.graduationproject.core.Constants.Companion.CURRENT_ORDER
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
-import com.example.graduationproject.ui_components.OnCourierItemClick
 
 class OrderListFragment : Fragment() {
 
@@ -23,7 +24,6 @@ class OrderListFragment : Fragment() {
         fun newInstance() = OrderListFragment()
     }
 
-    private lateinit var callback: OnCourierItemClick
     private lateinit var rvListOfOrders: ListView
     private lateinit var dialog: ProgressDialog
     private lateinit var arrayOfOrders: ArrayList<Order>
@@ -36,12 +36,28 @@ class OrderListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_order_list, container, false)
     }
 
+
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dialog = ProgressDialog.show(requireContext(), "Fetching all orders list", "Loading ...")
-        currentCourier = arguments?.getParcelable(Constants.CURRENT_COURIER)!!
-        configureListView()
-        fetchOrders()
+
+        currentCourier = SharedResources.executor.getCourier()!!
+
+        if(currentCourier.order != Constants.EMPTY_ORDER) {
+            val bundleObject = bundleOf(
+                CURRENT_COURIER to currentCourier,
+                CURRENT_ORDER to SharedResources.executor.getOrder()
+            )
+            findNavController().navigate(R.id.action_orderListFragment2_to_orderMapFragment, bundleObject)
+        } else {
+            dialog = ProgressDialog.show(
+                requireContext(),
+                "Fetching all orders list",
+                "Loading ...")
+
+            configureListView()
+            fetchOrders()
+        }
     }
 
     private fun configureListView() {
@@ -57,17 +73,21 @@ class OrderListFragment : Fragment() {
             object : ButtonChooseCallback {
                 override fun configureMapForItem(order: Order) {
                     FirebaseRDBService.executor.setCourierOrder(order.orderNumber.toString(), currentCourier!!.login!!)
-                    val bundleObject = bundleOf(Constants.CURRENT_ORDER to order, Constants.CURRENT_COURIER to currentCourier)
 
-                        //findNavController().navigate(R.id.action_orderListFragment_to_mapFragment, bundleObject)
+                    SharedResources.executor.setOrder(order)
+
+                    val bundleObject = bundleOf(
+                        CURRENT_COURIER to currentCourier,
+                        CURRENT_ORDER to order
+                    )
+
+                   // findNavController().navigate(R.id.introFragment, bundleObject)
                 }
             })
-
             arrayOfOrders = it
             dialog.dismiss()
         }
     }
-
 }
 
 interface ButtonChooseCallback {

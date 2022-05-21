@@ -1,4 +1,4 @@
-package com.example.graduationproject.components.location_utils
+package com.example.graduationproject.components.locationServices
 
 import com.beust.klaxon.*
 import com.example.graduationproject.core.Constants

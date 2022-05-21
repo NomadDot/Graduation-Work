@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_introFragment_to_adminFlowFragment"
             app:destination="@id/adminFlowFragment" />
+        <action
+            android:id="@+id/action_introFragment_to_courierFlowFragment"
+            app:destination="@id/courierFlowFragment" />
     </fragment>
     <fragment
         android:id="@+id/orderListFragment"
@@ -31,12 +34,17 @@
         tools:layout="@layout/fragment_order_list" />
     <fragment
         android:id="@+id/registerCourierFragment"
-        android:name="com.example.graduationproject.RegisterCourierFragment"
+        android:name="com.example.graduationproject.ui.intro.RegisterCourierFragment"
         android:label="fragment_register_courier"
         tools:layout="@layout/fragment_register_courier" />
     <fragment
         android:id="@+id/adminFlowFragment"
-        android:name="com.example.graduationproject.ui_components.admin_flow.AdminFlowFragment"
+        android:name="com.example.graduationproject.ui.flows.admin_flow.AdminFlowFragment"
         android:label="fragment_admin_flow"
         tools:layout="@layout/fragment_admin_flow" />
+    <fragment
+        android:id="@+id/courierFlowFragment"
+        android:name="com.example.graduationproject.ui.flows.courier_flow.CourierFlowFragment"
+        android:label="fragment_courier_flow"
+        tools:layout="@layout/fragment_courier_flow" />
 </navigation>

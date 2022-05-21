@@ -1,4 +1,4 @@
-package com.example.graduationproject.ui
+package com.example.graduationproject.ui.flows.admin_flow
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle

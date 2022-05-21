@@ -16,14 +16,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
-import com.example.graduationproject.components.location_utils.*
-import com.example.graduationproject.components.map_utils.getMarkerIcon
-import com.example.graduationproject.components.map_utils.zoom
+import com.example.graduationproject.components.locationServices.*
+import com.example.graduationproject.components.mapUtils.getMarkerIcon
+import com.example.graduationproject.components.mapUtils.zoom
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
 import com.example.graduationproject.ui.couriers.DistanceType
-import com.example.graduationproject.ui_components.PopUpDialog
+import com.example.graduationproject.ui.details.PopUpDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -108,13 +108,9 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
                         .setDistance(getDistance(DistanceType.DISTANCE)[0].toInt().toString())
                         .setPassedDistance(passedDistance)
                         .onButtonClick {
-                            FirebaseRDBService.executor.discardCourierOrder(courierId = currentCourier!!.login!!)
+                            FirebaseRDBService.executor.discardCourierOrder(orderNumber = currentOrder.orderNumber!!,courierId = currentCourier!!.login!!)
                             dialogDetails.dismiss()
-                            val courierBundle = bundleOf(Constants.CURRENT_COURIER to currentCourier)
-//                            findNavController().navigate(
-//                                R.id.action_mapFragment_to_orderListFragment,
-//                                courierBundle
-//                            )
+                            findNavController().navigate(R.id.orderListFragment2)
                         }
                         .build()
                         .getPopUpDialogView()

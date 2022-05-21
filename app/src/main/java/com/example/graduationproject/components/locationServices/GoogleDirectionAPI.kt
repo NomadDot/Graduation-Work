@@ -1,8 +1,7 @@
-package com.example.graduationproject.components.location_utils
+package com.example.graduationproject.components.locationServices
 
 import android.content.Context
 import android.graphics.Color
-import android.location.Location
 import android.util.Log
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.DirectionResponses

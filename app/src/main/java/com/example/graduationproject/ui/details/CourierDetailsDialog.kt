@@ -1,9 +1,8 @@
-package com.example.graduationproject.ui_components
+package com.example.graduationproject.ui.details
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import com.example.graduationproject.R
 import com.example.graduationproject.model.Courier

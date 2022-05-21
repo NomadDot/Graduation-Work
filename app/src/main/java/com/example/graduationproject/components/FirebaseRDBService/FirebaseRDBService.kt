@@ -1,5 +1,6 @@
 package com.example.graduationproject.components.FirebaseRDBService
 
+import com.example.graduationproject.components.sharedResources.SharedResources
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
 import com.google.firebase.database.DataSnapshot
@@ -80,24 +81,28 @@ class FirebaseRDBService() {
                 }
             }
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
+            override fun onCancelled(error: DatabaseError) {}
         })
     }
 
+    fun completeOrder(order: Order) {
+
+    }
+
     fun setCourierOrder(orderNumber: String, courierId: String) {
+        database.getReference("orders").child(orderNumber).child("status").setValue("processing")
         database.getReference("couriers").child(courierId).child("order").setValue(orderNumber)
     }
 
-    fun discardCourierOrder(courierId: String) {
+    fun discardCourierOrder(orderNumber: String, courierId: String) {
+        database.getReference("orders").child(orderNumber).child("status").setValue("enqueue")
         database.getReference("couriers").child(courierId).child("order").setValue("null")
     }
 
     fun fetchAllOrders(callback: (ArrayList<Order>) -> Unit)  {
         val arrayOfOrders = ArrayList<Order>()
         val ordersReference = database.getReference("orders")
+
         ordersReference.addValueEventListener(object :  ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()) {

@@ -1,4 +1,4 @@
-package com.example.graduationproject
+package com.example.graduationproject.ui.intro
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
 import com.example.graduationproject.model.Courier
 

@@ -1,4 +1,4 @@
-package com.example.graduationproject.ui_components
+package com.example.graduationproject.ui.details
 
 import android.annotation.SuppressLint
 import android.content.Context

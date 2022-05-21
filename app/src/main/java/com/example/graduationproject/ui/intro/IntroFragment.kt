@@ -20,7 +20,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FetchUserCallback
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
+import com.example.graduationproject.components.sharedResources.SharedResources
 import com.example.graduationproject.core.Constants
+import com.example.graduationproject.core.Constants.Companion.CURRENT_COURIER
+import com.example.graduationproject.core.Constants.Companion.CURRENT_ORDER
+import com.example.graduationproject.core.Constants.Companion.IS_APP_LAUNCH_ONCE
 import com.example.graduationproject.core.Constants.Companion.IS_USER_AUTHENTICATED
 import com.example.graduationproject.core.Constants.Companion.USER_LOGIN
 import com.example.graduationproject.model.Courier
@@ -54,6 +58,7 @@ class IntroFragment : Fragment() {
         btnRegister = requireView().findViewById(R.id.btnRegister)
         etLogin = requireView().findViewById(R.id.etLogin)
         etPassword = requireView().findViewById(R.id.etPassword)
+
         preferences = requireContext().getSharedPreferences(Constants.USER_DATA_STORAGE, Context.MODE_PRIVATE)
         test()
     }
@@ -117,7 +122,7 @@ class IntroFragment : Fragment() {
                                 .putBoolean(IS_USER_AUTHENTICATED, true)
                                  .apply()
 
-                            val currentCourier = bundleOf(Constants.CURRENT_COURIER to courier)
+                            val currentCourier = bundleOf(CURRENT_COURIER to courier)
                             findNavController().navigate(
                                 R.id.action_introFragment_to_adminFlowFragment,
                                 currentCourier
@@ -130,8 +135,8 @@ class IntroFragment : Fragment() {
                                 .putBoolean(IS_USER_AUTHENTICATED, true)
                                 .apply()
 
-                            val currentCourier = bundleOf(Constants.CURRENT_COURIER to courier)
-                            //  findNavController().navigate(R.id.action_introFragment_to_orderListFragment, currentCourier)
+                            SharedResources.executor.setCourier(courier)
+                            findNavController().navigate(R.id.courierFlowFragment)
                         }
 
                         else -> {
@@ -140,11 +145,14 @@ class IntroFragment : Fragment() {
                                 .putBoolean(IS_USER_AUTHENTICATED, true)
                                 .apply()
 
+                            SharedResources.executor.setCourier(courier)
+                            SharedResources.executor.setOrder(order)
+
                             val bundleObject = bundleOf(
                                 Constants.CURRENT_ORDER to order,
-                                Constants.CURRENT_COURIER to courier
+                                CURRENT_COURIER to courier
                             )
-                            // findNavController().navigate(R.id.action_introFragment_to_mapFragment, bundleObject)
+                            findNavController().navigate(R.id.courierFlowFragment, bundleObject)
                         }
                     }
                 }
@@ -172,39 +180,63 @@ class IntroFragment : Fragment() {
 
         requireActivity().requestPermissions(
             arrayOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.READ_EXTERNAL_STORAGE,), 0)
 
-        if(isUserAuthorized()) {
-            val dialogAuth = ProgressDialog.show(requireContext(), "Аутетифікація...", "")
-            FirebaseRDBService.executor.fetchCurrentCourier(login) {
-                when {
+            if (isUserAuthorized()) {
+                val dialogAuth = ProgressDialog.show(requireContext(), "Аутетифікація...", "")
+                FirebaseRDBService.executor.fetchCurrentCourier(login) {
+                    when {
 
-                    it!!.password == Constants.ADMIN_PASSWORD -> {
-                        dialogAuth.dismiss()
-                        val currentCourier = bundleOf(Constants.CURRENT_COURIER to it)
-                        findNavController().navigate(
-                            R.id.action_introFragment_to_adminFlowFragment,
-                            currentCourier
-                        )
+                        it!!.password == Constants.ADMIN_PASSWORD -> {
+                            dialogAuth.dismiss()
+
+                            SharedResources.executor.setCourier(it)
+
+                            val currentCourier = bundleOf(CURRENT_COURIER to it)
+                            findNavController().navigate(
+                                R.id.action_introFragment_to_adminFlowFragment,
+                                currentCourier
+                            )
+                        }
+
+                        it.order == "null" -> {
+                            dialogAuth.dismiss()
+                            SharedResources.executor.setCourier(it)
+                            val currentCourier = bundleOf(CURRENT_COURIER to it)
+
+                            findNavController().navigate(
+                                R.id.courierFlowFragment,
+                                currentCourier
+                            )
+                        }
+
+                        it.order != "null" -> {
+                            FirebaseRDBService.executor.fetchCurrentOrder(it.order.toString()) { order ->
+                                dialogAuth.dismiss()
+
+                                SharedResources.executor.setOrder(order!!)
+                                SharedResources.executor.setCourier(it)
+
+                                val bundleObject = bundleOf(
+                                    CURRENT_COURIER to it
+                                )
+
+                                findNavController().navigate(
+                                    R.id.courierFlowFragment,
+                                    bundleObject
+                                )
+                            }
+                        }
                     }
-
-                    it.order == "null" -> {
-                        dialogAuth.dismiss()
-                        val currentCourier = bundleOf(Constants.CURRENT_COURIER to it)
-                        //  findNavController().navigate(R.id.action_introFragment_to_orderListFragment, currentCourier)
-                    }
-
                 }
-
             }
-        }
     }
 
     private fun test() {
-        etLogin.setText("admin")
-        etPassword.setText("987")
+        etLogin.setText("rmnvlshn123")
+        etPassword.setText("123")
     }
 
 }

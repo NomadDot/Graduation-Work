@@ -9,13 +9,13 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
-import com.example.graduationproject.components.location_utils.GoogleDirectionAPI
-import com.example.graduationproject.components.map_utils.getMarkerIcon
-import com.example.graduationproject.components.map_utils.zoom
+import com.example.graduationproject.components.locationServices.GoogleDirectionAPI
+import com.example.graduationproject.components.mapUtils.getMarkerIcon
+import com.example.graduationproject.components.mapUtils.zoom
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
-import com.example.graduationproject.ui_components.CourierDetailsDialog
+import com.example.graduationproject.ui.details.CourierDetailsDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
