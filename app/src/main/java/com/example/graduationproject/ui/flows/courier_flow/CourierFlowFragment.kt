@@ -45,11 +45,6 @@ class CourierFlowFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CourierFlowViewModel::class.java)
 
-        val currentCourier =  SharedResources.executor.getCourier()
-
-        FirebaseRDBService.executor.fetchCurrentOrder(currentCourier!!.order.toString()) { order ->
-            SharedResources.executor.setOrder(order!!)
-        }
         setOnBackButtonPressListener()
     }
 

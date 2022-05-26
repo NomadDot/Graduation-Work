@@ -41,7 +41,10 @@ class OrderListAdapter(
 
         tvOrder.text = "# ${dataSource[position].orderNumber}"
         tvPlace.text = "${tvPlace.text}${dataSource[position].shopName}"
-        tvProducts.text = "${tvProducts.text}${dataSource[position].product1}|${dataSource[position].product2}|${dataSource[position].product3}"
+        tvProducts.text = "${tvProducts.text} " +
+                "${dataSource[position].product1}" +
+                "|${dataSource[position].product2}" +
+                "|${dataSource[position].product3}"
         tvOrigin.text = "${tvOrigin.text}${dataSource[position].placeFrom}"
         tvDestination.text = "${tvDestination.text}${dataSource[position].placeTo}"
 

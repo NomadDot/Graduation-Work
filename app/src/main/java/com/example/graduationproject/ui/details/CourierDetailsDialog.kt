@@ -22,10 +22,10 @@ class CourierDetailsDialog(context: Context, builder: Builder) : View(context) {
         private var tvProducts: TextView
         private var tvDistance: TextView
         private var tvPassedDistance: TextView
+        private var tvTime: TextView
 
         private var tvCourierName: TextView
         private var tvCourierAge: TextView
-        private var tvCourierRate: TextView
         private var tvCourierPhoneNumber: TextView
 
         init {
@@ -37,15 +37,14 @@ class CourierDetailsDialog(context: Context, builder: Builder) : View(context) {
             tvDistance = view.findViewById(R.id.tvDistanceValue)
             tvCourierName = view.findViewById(R.id.tvCourierName)
             tvCourierAge = view.findViewById(R.id.tvCourierAge)
-            tvCourierRate = view.findViewById(R.id.tvCourierRateValue)
             tvPassedDistance = view.findViewById(R.id.tvDistancePassedValue)
             tvCourierPhoneNumber = view.findViewById(R.id.tvPhoneNumber)
+            tvTime = view.findViewById(R.id.tvTimeValue)
         }
 
         fun setCourierItemView(courier: Courier): Builder {
             tvCourierName.text = "${courier.name} ${courier.lastName}"
             tvCourierAge.text = courier.age
-            tvCourierRate.text = courier.rate
             tvCourierPhoneNumber.text = courier.phoneNumber
             return this
         }
@@ -83,6 +82,11 @@ class CourierDetailsDialog(context: Context, builder: Builder) : View(context) {
 
         fun setPassedDistance(value: String): Builder {
             tvPassedDistance.text = "$value м."
+            return this
+        }
+
+        fun setTime(value: String): Builder {
+            tvTime.text = value
             return this
         }
 

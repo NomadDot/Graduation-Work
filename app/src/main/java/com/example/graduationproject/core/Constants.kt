@@ -9,9 +9,10 @@ class Constants {
         /* Business  Logic */
         const val CURRENT_COURIER = "CURRENT_COURIER"
         const val CURRENT_ORDER = "CURRENT_ORDER"
-        const val ADMIN_PASSWORD = "987"
         const val EMPTY_ORDER = "null"
 
+        const val ADMIN_PASSWORD = "987"
+        const val ADMIN_KEY = "admin"
         /* Shared preferences */
         const val USER_DATA_STORAGE = "USER_DATA"
         const val USER_LOGIN = "user_login"

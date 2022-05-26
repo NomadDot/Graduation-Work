@@ -9,8 +9,8 @@ class SharedResources() {
         var executor =  SharedResources()
     }
 
-    private lateinit var currentCourier: Courier
-    private lateinit var currentOrder: Order
+    private var currentCourier: Courier? = null
+    private var currentOrder: Order? = null
 
     fun getCourier(): Courier? {
         return currentCourier
@@ -26,5 +26,18 @@ class SharedResources() {
 
     fun setOrder(order: Order) {
         currentOrder = order
+    }
+
+    fun clearOrder() {
+        currentOrder = null
+    }
+
+    fun clearCourier() {
+        currentCourier = null
+    }
+
+    fun clearConfig() {
+        currentCourier = null
+        currentOrder = null
     }
 }

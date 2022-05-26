@@ -29,6 +29,8 @@ import com.example.graduationproject.core.Constants.Companion.IS_USER_AUTHENTICA
 import com.example.graduationproject.core.Constants.Companion.USER_LOGIN
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
+import com.example.graduationproject.model.UserType
+import com.example.graduationproject.model.UserType.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class IntroFragment : Fragment() {
@@ -74,6 +76,13 @@ class IntroFragment : Fragment() {
         return preferences.getBoolean(IS_USER_AUTHENTICATED, false)
     }
 
+    private fun setUserCredential(login: String) {
+        preferences.edit()
+            .putString(USER_LOGIN, login)
+            .putBoolean(IS_USER_AUTHENTICATED, true)
+            .apply()
+    }
+
     private fun configureAuthButton() {
         btnAuth.setOnClickListener {
             dialog = ProgressDialog.show(requireContext(), "Authorization", "Loading ...")
@@ -91,6 +100,7 @@ class IntroFragment : Fragment() {
                         "Error. Something went wrong ",
                         Toast.LENGTH_SHORT
                         ).show()
+
                         dialog.dismiss()
                     }
                 }
@@ -105,7 +115,8 @@ class IntroFragment : Fragment() {
             etPassword.text.toString(),
             object : AuthResponse {
                 @SuppressLint("CommitPrefEdits")
-                override fun onSuccess(order: Order?, courier: Courier, isAdmin: Boolean) {
+                override fun onSuccess(userType: UserType, order: Order?, courier: Courier?) {
+
                     Toast.makeText(
                         requireContext(),
                         "You've been successfully authorized.",
@@ -114,13 +125,9 @@ class IntroFragment : Fragment() {
 
                     dialog.dismiss()
 
-                    when {
-
-                        isAdmin -> {
-                             preferences.edit()
-                                .putString(USER_LOGIN, courier.login)
-                                .putBoolean(IS_USER_AUTHENTICATED, true)
-                                 .apply()
+                    when (userType) {
+                        ADMIN -> {
+                             setUserCredential(courier!!.login.toString())
 
                             val currentCourier = bundleOf(CURRENT_COURIER to courier)
                             findNavController().navigate(
@@ -129,24 +136,14 @@ class IntroFragment : Fragment() {
                             )
                         }
 
-                        order == null -> {
-                            preferences.edit()
-                                .putString(USER_LOGIN, courier.login)
-                                .putBoolean(IS_USER_AUTHENTICATED, true)
-                                .apply()
+                        COURIER_WITH_NO_ORDER -> {
+                            setUserCredential(courier!!.login.toString())
 
-                            SharedResources.executor.setCourier(courier)
                             findNavController().navigate(R.id.courierFlowFragment)
                         }
 
-                        else -> {
-                            preferences.edit()
-                                .putString(USER_LOGIN, courier.login)
-                                .putBoolean(IS_USER_AUTHENTICATED, true)
-                                .apply()
-
-                            SharedResources.executor.setCourier(courier)
-                            SharedResources.executor.setOrder(order)
+                        COURIER_WITH_ORDER -> {
+                            setUserCredential(courier!!.login.toString())
 
                             val bundleObject = bundleOf(
                                 Constants.CURRENT_ORDER to order,
@@ -174,7 +171,9 @@ class IntroFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)[IntroViewModel::class.java]
+
         initView()
+
         configureAuthButton()
         configureRegisterButton()
 
@@ -182,52 +181,30 @@ class IntroFragment : Fragment() {
             arrayOf(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.READ_EXTERNAL_STORAGE,), 0)
+                Manifest.permission.READ_EXTERNAL_STORAGE),
+            0
+        )
 
             if (isUserAuthorized()) {
-                val dialogAuth = ProgressDialog.show(requireContext(), "Аутетифікація...", "")
-                FirebaseRDBService.executor.fetchCurrentCourier(login) {
-                    when {
+                val dialogAuth = ProgressDialog.show(requireContext(), "Аутетифікація...", null)
 
-                        it!!.password == Constants.ADMIN_PASSWORD -> {
-                            dialogAuth.dismiss()
-
-                            SharedResources.executor.setCourier(it)
-
-                            val currentCourier = bundleOf(CURRENT_COURIER to it)
-                            findNavController().navigate(
-                                R.id.action_introFragment_to_adminFlowFragment,
-                                currentCourier
-                            )
+                viewModel.fetchUser(login) { userType ->
+                    dialogAuth.dismiss()
+                    when(userType) {
+                        ADMIN -> {
+                            val bundleCourier = bundleOf(CURRENT_COURIER to SharedResources.executor.getCourier())
+                            findNavController().navigate(R.id.adminFlowFragment, bundleCourier)
                         }
-
-                        it.order == "null" -> {
-                            dialogAuth.dismiss()
-                            SharedResources.executor.setCourier(it)
-                            val currentCourier = bundleOf(CURRENT_COURIER to it)
-
-                            findNavController().navigate(
-                                R.id.courierFlowFragment,
-                                currentCourier
+                        COURIER_WITH_ORDER -> {
+                            val bundleOfCourierAndOrder = bundleOf(
+                                CURRENT_COURIER to SharedResources.executor.getCourier(),
+                                CURRENT_ORDER to SharedResources.executor.getOrder()
                             )
+                            findNavController().navigate(R.id.courierFlowFragment, bundleOfCourierAndOrder)
                         }
-
-                        it.order != "null" -> {
-                            FirebaseRDBService.executor.fetchCurrentOrder(it.order.toString()) { order ->
-                                dialogAuth.dismiss()
-
-                                SharedResources.executor.setOrder(order!!)
-                                SharedResources.executor.setCourier(it)
-
-                                val bundleObject = bundleOf(
-                                    CURRENT_COURIER to it
-                                )
-
-                                findNavController().navigate(
-                                    R.id.courierFlowFragment,
-                                    bundleObject
-                                )
-                            }
+                        COURIER_WITH_NO_ORDER -> {
+                            val bundleCourier = bundleOf(CURRENT_COURIER to SharedResources.executor.getCourier())
+                            findNavController().navigate(R.id.courierFlowFragment)
                         }
                     }
                 }
@@ -238,5 +215,4 @@ class IntroFragment : Fragment() {
         etLogin.setText("rmnvlshn123")
         etPassword.setText("123")
     }
-
 }

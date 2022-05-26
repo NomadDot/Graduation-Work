@@ -1,6 +1,8 @@
 package com.example.graduationproject.components.FirebaseRDBService
 
 import com.example.graduationproject.components.sharedResources.SharedResources
+import com.example.graduationproject.core.Constants
+import com.example.graduationproject.core.Constants.Companion.ADMIN_KEY
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
 import com.google.firebase.database.DataSnapshot
@@ -30,7 +32,6 @@ class FirebaseRDBService() {
                     lastName = it.child("lastName").value.toString(),
                     password = it.child("password").value.toString(),
                     login = key,
-                    rate = it.child("rate").value.toString(),
                     age = it.child("age").value.toString(),
                     order = it.child("order").value.toString(),
                     currentLat = it.child("currentLat").value.toString(),
@@ -50,7 +51,7 @@ class FirebaseRDBService() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()) {
                         for (courierSnapshot in snapshot.children) {
-                            if(courierSnapshot.key != "admin") {
+                            if(courierSnapshot.key != ADMIN_KEY) {
                                 if (courierSnapshot.hasChild("lastElement")) {
                                     callback.onSuccessResponse(arrayOfCouriers)
                                 } else {
@@ -83,10 +84,6 @@ class FirebaseRDBService() {
 
             override fun onCancelled(error: DatabaseError) {}
         })
-    }
-
-    fun completeOrder(order: Order) {
-
     }
 
     fun setCourierOrder(orderNumber: String, courierId: String) {

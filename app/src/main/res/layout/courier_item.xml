@@ -51,32 +51,18 @@
         app:layout_constraintStart_toEndOf="@+id/ivCourierImage"
         app:layout_constraintTop_toBottomOf="@id/tvCourierAge" />
 
-    <TextView
-        android:id="@+id/tvCourierStatus"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="5dp"
-        android:textSize="17dp"
-        android:fontFamily="@font/inter_medium"
-        android:text="Статус:"
-        app:layout_constraintEnd_toStartOf="@id/tvCourierStatusValue"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
+    <ImageView
         android:id="@+id/tvCourierStatusValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:textSize="20dp"
-        android:fontFamily="@font/inter_medium"
-        android:text="o"
+        android:background="@drawable/status_shape"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+<!--
     <TextView
         android:id="@+id/tvCourierRate"
         android:layout_width="0dp"
@@ -87,7 +73,7 @@
         android:text="Рейтинг: "
         android:textSize="17dp"
         app:layout_constraintEnd_toStartOf="@id/tvCourierRateValue"
-        app:layout_constraintTop_toBottomOf="@id/tvCourierStatus" />
+        app:layout_constraintTop_toBottomOf="@id/tvCourierStatusValue" />
 
     <TextView
         android:id="@+id/tvCourierRateValue"
@@ -99,7 +85,8 @@
         android:textSize="20dp"
         android:text="9"
         app:layout_constraintEnd_toStartOf="@id/tvCourierRateScale"
-        app:layout_constraintTop_toBottomOf="@id/tvCourierStatus"/>
+        app:layout_constraintTop_toBottomOf="@id/tvCourierStatusValue"/>
+
 
     <TextView
         android:id="@+id/tvCourierRateScale"
@@ -112,7 +99,8 @@
         android:text="/10"
         android:fontFamily="@font/inter_medium"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCourierStatus"/>
+        app:layout_constraintTop_toBottomOf="@id/tvCourierStatusValue"/>
+    -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

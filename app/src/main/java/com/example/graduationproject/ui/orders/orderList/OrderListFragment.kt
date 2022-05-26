@@ -36,7 +36,6 @@ class OrderListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_order_list, container, false)
     }
 
-
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

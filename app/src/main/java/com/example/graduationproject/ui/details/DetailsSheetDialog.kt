@@ -24,6 +24,7 @@ class PopUpDialog(context: Context, builder: Builder) : View(context) {
         private var tvDistance: TextView
         private var tvPassedDistance: TextView
         private var btnDone: Button
+        private var tvTime: TextView
 
         init {
             tvOrderNumber = view.findViewById(R.id.orderNumber)
@@ -34,6 +35,7 @@ class PopUpDialog(context: Context, builder: Builder) : View(context) {
             tvDistance = view.findViewById(R.id.tvDistanceValue)
             tvPassedDistance = view.findViewById(R.id.tvDistancePassedValue)
             btnDone = view.findViewById(R.id.btnDone)
+            tvTime = view.findViewById(R.id.tvTimeValue)
         }
 
         fun setOrderNumber(value: String): Builder {
@@ -68,6 +70,11 @@ class PopUpDialog(context: Context, builder: Builder) : View(context) {
 
         fun setPassedDistance(value: String): Builder {
             tvPassedDistance.text = value
+            return this
+        }
+
+        fun setTime(value: String): Builder {
+            tvTime.text = value
             return this
         }
 

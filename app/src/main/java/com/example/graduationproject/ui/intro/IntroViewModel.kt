@@ -1,16 +1,14 @@
 package com.example.graduationproject.ui.intro
 
-import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModel
-import androidx.navigation.fragment.findNavController
-import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FetchUserCallback
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
+import com.example.graduationproject.components.sharedResources.SharedResources
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
 import com.example.graduationproject.model.UserType
+import com.example.graduationproject.model.UserType.*
 
 class IntroViewModel : ViewModel() {
 
@@ -23,47 +21,87 @@ class IntroViewModel : ViewModel() {
             login,
             object : FetchUserCallback {
                 override fun onSuccessResponse(courier: Courier) {
-                    configureFlowWithUserInfo(password, courier) { userType ->
+                    configureFlowWithUserInputData(password, courier) { userType ->
                         when (userType) {
-                            UserType.USER_DOES_NOT_EXIST -> callback.onFailure("Помилка. Такого користувача не існує")
+                            USER_DOES_NOT_EXIST -> callback.onFailure("Помилка. Такого користувача не існує")
 
-                            UserType.ADMIN -> callback.onSuccess(null, courier, true)
+                            ADMIN -> {
+                                SharedResources.executor.setCourier(courier)
 
-                            UserType.COURIER_WITH_ORDER -> {
+                                callback.onSuccess(ADMIN, null, courier)
+                            }
+
+                            COURIER_WITH_ORDER -> {
                                 FirebaseRDBService.executor.fetchCurrentOrder(courier.order!!) {
-                                    callback.onSuccess(order = it, courier = courier, false)
+                                    SharedResources.executor.setOrder(it!!)
+                                    SharedResources.executor.setCourier(courier)
+
+                                    callback.onSuccess(COURIER_WITH_ORDER,order = it, courier = courier)
                                 }
                             }
 
-                            UserType.COURIER_WITH_NO_ORDER -> callback.onSuccess(null, courier, false)
+                            COURIER_WITH_NO_ORDER -> {
+                                SharedResources.executor.setCourier(courier)
+
+                                callback.onSuccess(COURIER_WITH_NO_ORDER, null, courier)
+                            }
                         }
                     }
                 }
 
                 override fun onFailureResponse() {
+                    callback.onFailure("Error. Turn on internet connection")
                 }
             }
         )
     }
 
-    private fun configureFlowWithUserInfo(password: String, courier: Courier, callback: (UserType) -> Unit) {
+    private fun configureFlowWithUserInputData(password: String, courier: Courier, callback: (UserType) -> Unit) {
         if (password == courier.password) {
             if (courier.password == Constants.ADMIN_PASSWORD) {
-                callback(UserType.ADMIN)
+                callback(ADMIN)
             } else {
                 if (courier.order == "null") {
-                    callback(UserType.COURIER_WITH_NO_ORDER)
+                    callback(COURIER_WITH_NO_ORDER)
                 } else {
-                    callback(UserType.COURIER_WITH_ORDER)
+                    callback(COURIER_WITH_ORDER)
                 }
             }
         } else {
-            callback(UserType.USER_DOES_NOT_EXIST)
+            callback(USER_DOES_NOT_EXIST)
+        }
+    }
+
+    fun fetchUser(
+        login: String,
+        callback : (UserType) -> Unit
+    ) {
+        FirebaseRDBService.executor.fetchCurrentCourier(login) {
+            when {
+                it!!.password == Constants.ADMIN_PASSWORD -> {
+                    SharedResources.executor.setCourier(it)
+                    callback(ADMIN)
+                }
+
+                it.order == "null" -> {
+                    SharedResources.executor.setCourier(it)
+                    callback(COURIER_WITH_NO_ORDER)
+                }
+
+                it.order != "null" -> {
+                    FirebaseRDBService.executor.fetchCurrentOrder(it.order.toString()) { order ->
+                        SharedResources.executor.setOrder(order!!)
+                        SharedResources.executor.setCourier(it)
+
+                        callback(COURIER_WITH_ORDER)
+                    }
+                }
+            }
         }
     }
 }
 
 interface AuthResponse {
-    fun onSuccess(order: Order?, courier: Courier, isAdmin: Boolean)
+    fun onSuccess(type: UserType, order: Order?, courier: Courier?)
     fun onFailure(error: String)
 }
