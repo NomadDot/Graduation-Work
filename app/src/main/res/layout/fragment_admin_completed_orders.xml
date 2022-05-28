@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.orders.orderList.OrderListFragment">
+    tools:context=".ui.flows.admin_flow.AdminMapFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Список замовлень"
+            android:text="Виконані замовлення"
             android:gravity="center"
             android:textSize="20dp"
             android:textColor="@color/text_main_color"
@@ -33,12 +33,16 @@
         android:background="@color/text_main_color"
         />
 
-    <ListView
-        android:layout_marginTop="82dp"
-        android:id="@+id/listViewOfOrders"
+    <ExpandableListView
+        android:id="@+id/expadableList"
         android:layout_width="match_parent"
-        android:divider="@android:color/transparent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/item_order"
-        />
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:groupIndicator="@null"
+        tools:listitem="@layout/order_expand_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

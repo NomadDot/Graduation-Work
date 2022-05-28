@@ -1,7 +1,5 @@
 package com.example.graduationproject.components.FirebaseRDBService
 
-import com.example.graduationproject.components.sharedResources.SharedResources
-import com.example.graduationproject.core.Constants
 import com.example.graduationproject.core.Constants.Companion.ADMIN_KEY
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
@@ -81,19 +79,28 @@ class FirebaseRDBService() {
                     }
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {}
         })
     }
 
-    fun setCourierOrder(orderNumber: String, courierId: String) {
+    fun setCourierOrder(orderNumber: String, courierId: String, courierName: String) {
         database.getReference("orders").child(orderNumber).child("status").setValue("processing")
+        database.getReference("orders").child(orderNumber).child("courier").setValue(courierName)
         database.getReference("couriers").child(courierId).child("order").setValue(orderNumber)
     }
 
     fun discardCourierOrder(orderNumber: String, courierId: String) {
-        database.getReference("orders").child(orderNumber).child("status").setValue("enqueue")
+        database.getReference("orders").child(orderNumber).child("status").setValue("completed")
         database.getReference("couriers").child(courierId).child("order").setValue("null")
+    }
+
+    fun updateCourierLocation(
+        courierId: String,
+        latitude: String,
+        longitude: String
+    ) {
+        database.getReference("couriers").child(courierId).child("currentLat").setValue(latitude)
+        database.getReference("couriers").child(courierId).child("currentLong").setValue(longitude)
     }
 
     fun fetchAllOrders(callback: (ArrayList<Order>) -> Unit)  {

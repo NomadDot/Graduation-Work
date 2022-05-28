@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    override fun onDestroy() {
+    override fun onDestroy() { // TODO: this to "onStop"
         super.onDestroy()
         val preferences = getSharedPreferences(Constants.USER_DATA_STORAGE, MODE_PRIVATE)
         preferences.edit().putBoolean(Constants.IS_APP_LAUNCH_ONCE, false).apply()

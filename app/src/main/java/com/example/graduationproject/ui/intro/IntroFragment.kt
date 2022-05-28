@@ -63,6 +63,8 @@ class IntroFragment : Fragment() {
 
         preferences = requireContext().getSharedPreferences(Constants.USER_DATA_STORAGE, Context.MODE_PRIVATE)
         test()
+
+        SharedResources.executor.setContext(requireContext())
     }
 
     private fun configureRegisterButton() {
@@ -96,7 +98,7 @@ class IntroFragment : Fragment() {
 
                     override fun onFailureResponse() {
                          Toast.makeText(
-                                requireContext(),
+                             SharedResources.executor.getContext()!!,
                         "Error. Something went wrong ",
                         Toast.LENGTH_SHORT
                         ).show()
@@ -114,11 +116,10 @@ class IntroFragment : Fragment() {
             etLogin.text.toString(),
             etPassword.text.toString(),
             object : AuthResponse {
-                @SuppressLint("CommitPrefEdits")
                 override fun onSuccess(userType: UserType, order: Order?, courier: Courier?) {
 
                     Toast.makeText(
-                        requireContext(),
+                        SharedResources.executor.getContext()!!,
                         "You've been successfully authorized.",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -130,16 +131,19 @@ class IntroFragment : Fragment() {
                              setUserCredential(courier!!.login.toString())
 
                             val currentCourier = bundleOf(CURRENT_COURIER to courier)
-                            findNavController().navigate(
-                                R.id.action_introFragment_to_adminFlowFragment,
-                                currentCourier
-                            )
+                            try{
+                                findNavController().navigate(
+                                    R.id.action_introFragment_to_adminFlowFragment,
+                                    currentCourier
+                                )
+                            } catch (e: Exception) {}
                         }
 
                         COURIER_WITH_NO_ORDER -> {
                             setUserCredential(courier!!.login.toString())
-
+                        try {
                             findNavController().navigate(R.id.courierFlowFragment)
+                        } catch (e: Exception) {}
                         }
 
                         COURIER_WITH_ORDER -> {
@@ -149,14 +153,16 @@ class IntroFragment : Fragment() {
                                 Constants.CURRENT_ORDER to order,
                                 CURRENT_COURIER to courier
                             )
+                            try {
                             findNavController().navigate(R.id.courierFlowFragment, bundleObject)
+                        } catch (e: Exception) {}
                         }
                     }
                 }
 
                 override fun onFailure(error: String) {
                     Toast.makeText(
-                        requireContext(),
+                        SharedResources.executor.getContext()!!,
                         "Error. Password or Login is not correct or courier is not exist ",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -193,22 +199,32 @@ class IntroFragment : Fragment() {
                     when(userType) {
                         ADMIN -> {
                             val bundleCourier = bundleOf(CURRENT_COURIER to SharedResources.executor.getCourier())
+                            try {
                             findNavController().navigate(R.id.adminFlowFragment, bundleCourier)
+                            } catch (e: Exception) {}
                         }
                         COURIER_WITH_ORDER -> {
                             val bundleOfCourierAndOrder = bundleOf(
                                 CURRENT_COURIER to SharedResources.executor.getCourier(),
                                 CURRENT_ORDER to SharedResources.executor.getOrder()
                             )
+                            try {
                             findNavController().navigate(R.id.courierFlowFragment, bundleOfCourierAndOrder)
+                        } catch (e: Exception) {}
                         }
                         COURIER_WITH_NO_ORDER -> {
-                            val bundleCourier = bundleOf(CURRENT_COURIER to SharedResources.executor.getCourier())
-                            findNavController().navigate(R.id.courierFlowFragment)
+                            try {
+                                findNavController().navigate(R.id.courierFlowFragment)
+                            } catch (e: Exception) {}
                         }
                     }
                 }
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     private fun test() {

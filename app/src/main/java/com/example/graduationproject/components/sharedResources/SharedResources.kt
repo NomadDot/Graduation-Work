@@ -1,5 +1,6 @@
 package com.example.graduationproject.components.sharedResources
 
+import android.content.Context
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
 
@@ -11,6 +12,7 @@ class SharedResources() {
 
     private var currentCourier: Courier? = null
     private var currentOrder: Order? = null
+    private var context: Context? = null
 
     fun getCourier(): Courier? {
         return currentCourier
@@ -28,6 +30,14 @@ class SharedResources() {
         currentOrder = order
     }
 
+    fun getContext(): Context? {
+        return context
+    }
+
+    fun setContext(context: Context) {
+        this.context = context
+    }
+
     fun clearOrder() {
         currentOrder = null
     }
@@ -39,5 +49,6 @@ class SharedResources() {
     fun clearConfig() {
         currentCourier = null
         currentOrder = null
+        context = null
     }
 }

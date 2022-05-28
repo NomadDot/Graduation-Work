@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.graduationproject.R
 import com.example.graduationproject.components.FirebaseRDBService.FetchCouriers
 import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBService
+import com.example.graduationproject.components.sharedResources.SharedResources
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.Courier
 
@@ -43,7 +44,9 @@ class CouriersListFragment : Fragment(){
         FirebaseRDBService.executor.fetchCouriers(object : FetchCouriers {
             override fun onSuccessResponse(arrayList: ArrayList<Courier>) {
 
-                rvListOfCouriers.adapter = CourierListAdapter(requireContext(), arrayList)
+                rvListOfCouriers.adapter = CourierListAdapter(
+                    SharedResources.executor.getContext()!!,
+                    arrayList)
 
                 rvListOfCouriers.setOnItemClickListener { adapterView, view, i, l ->
                     if(arrayList[i].order != "null") {
@@ -51,7 +54,10 @@ class CouriersListFragment : Fragment(){
                         val bundleCurrentCourier = bundleOf(Constants.CURRENT_COURIER to currentCourier)
                         findNavController().navigate(R.id.action_couriersListFragment2_to_courierMapFragment, bundleCurrentCourier)
                     } else {
-                        Toast.makeText(requireContext(), "Кур'єр нічого не доставляє", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            SharedResources.executor.getContext()!!,
+                            "Кур'єр нічого не доставляє",
+                            Toast.LENGTH_LONG).show()
                     }
                 }
                 dialog.dismiss()

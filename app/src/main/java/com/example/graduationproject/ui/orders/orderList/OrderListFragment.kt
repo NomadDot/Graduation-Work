@@ -17,6 +17,8 @@ import com.example.graduationproject.core.Constants.Companion.CURRENT_COURIER
 import com.example.graduationproject.core.Constants.Companion.CURRENT_ORDER
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
+import kotlinx.android.synthetic.main.order_expanded_item.*
+import com.example.graduationproject.core.Constants.Companion.ORDER_STATUS_COMPLETED as ORDER_STATUS_COMPLETED
 
 class OrderListFragment : Fragment() {
 
@@ -66,12 +68,24 @@ class OrderListFragment : Fragment() {
 
     private fun fetchOrders() {
         FirebaseRDBService.executor.fetchAllOrders {
+            val activeOrders = ArrayList<Order>()
+
+            for (order in it) {
+                if(order.status != ORDER_STATUS_COMPLETED)   {
+                    activeOrders.add(order)
+                }
+            }
+
             rvListOfOrders.adapter = OrderListAdapter(
-                requireContext(),
-                it,
+                SharedResources.executor.getContext()!!,
+                activeOrders,
             object : ButtonChooseCallback {
                 override fun configureMapForItem(order: Order) {
-                    FirebaseRDBService.executor.setCourierOrder(order.orderNumber.toString(), currentCourier!!.login!!)
+                    FirebaseRDBService.executor.setCourierOrder(
+                        order.orderNumber.toString(),
+                        currentCourier!!.login!!,
+                        "${currentCourier.name} ${currentCourier.lastName}"
+                        )
 
                     SharedResources.executor.setOrder(order)
 
@@ -80,7 +94,7 @@ class OrderListFragment : Fragment() {
                         CURRENT_ORDER to order
                     )
 
-                   // findNavController().navigate(R.id.introFragment, bundleObject)
+                    findNavController().navigate(R.id.action_orderListFragment2_to_orderMapFragment, bundleObject)
                 }
             })
             arrayOfOrders = it

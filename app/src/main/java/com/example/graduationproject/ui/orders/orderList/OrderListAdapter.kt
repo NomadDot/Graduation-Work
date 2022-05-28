@@ -1,5 +1,6 @@
 package com.example.graduationproject.ui.orders.orderList
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,7 @@ class OrderListAdapter(
         return position.toLong()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun getView(position: Int, converterView: View?, parent: ViewGroup?): View {
         val orderItemView = inflater.inflate(R.layout.item_order, parent, false)
         val tvOrder = orderItemView.findViewById<TextView>(R.id.tvOrderNumber)
@@ -43,8 +45,8 @@ class OrderListAdapter(
         tvPlace.text = "${tvPlace.text}${dataSource[position].shopName}"
         tvProducts.text = "${tvProducts.text} " +
                 "${dataSource[position].product1}" +
-                "|${dataSource[position].product2}" +
-                "|${dataSource[position].product3}"
+                ",${dataSource[position].product2}" +
+                ",${dataSource[position].product3}"
         tvOrigin.text = "${tvOrigin.text}${dataSource[position].placeFrom}"
         tvDestination.text = "${tvDestination.text}${dataSource[position].placeTo}"
 

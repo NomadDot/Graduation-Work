@@ -129,7 +129,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/password"
             android:gravity="center"
-            android:inputType="textPassword"
+            android:inputType="numberPassword"
             android:layout_marginTop="10dp"
             android:singleLine="true"
             android:background="@drawable/input_field"

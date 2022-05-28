@@ -11,6 +11,7 @@ import com.example.graduationproject.components.FirebaseRDBService.FirebaseRDBSe
 import com.example.graduationproject.components.locationServices.GoogleDirectionAPI
 import com.example.graduationproject.components.mapUtils.getMarkerIcon
 import com.example.graduationproject.components.mapUtils.zoom
+import com.example.graduationproject.components.sharedResources.SharedResources
 import com.example.graduationproject.core.Constants
 import com.example.graduationproject.model.Courier
 import com.example.graduationproject.model.Order
@@ -77,7 +78,7 @@ class CourierMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
             GoogleDirectionAPI.fetchDistance(
                 origin = "${currentCourier.currentLat},${currentCourier.currentLong}",
                 destination =  "${processingOrder!!.latTo!!},${processingOrder.longTo!!}",
-                requireContext()
+                SharedResources.executor.getContext()!!
             ) { courierDistance ->
 
                 val passedDistanceValue = distance.toInt() - courierDistance.toInt()
@@ -88,10 +89,10 @@ class CourierMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                 }
 
                     val bottomSheetDialog =
-                        BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
+                        BottomSheetDialog(SharedResources.executor.getContext()!!, R.style.BottomSheetDialogTheme)
 
                     bottomSheetDialog.setContentView(
-                        CourierDetailsDialog.Builder(requireContext())
+                        CourierDetailsDialog.Builder(SharedResources.executor.getContext()!!)
                             .setCourierItemView(currentCourier)
                             .setOrderNumber(processingOrder!!.orderNumber.toString())
                             .setPlace(processingOrder!!.shopName.toString())
@@ -165,7 +166,7 @@ class CourierMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                     GoogleDirectionAPI.fetchRoute(
                         locationFromLatLngString,
                         locationToLatLngString,
-                        requireContext()
+                        SharedResources.executor.getContext()!!
                     ) {
                         GoogleDirectionAPI.drawPolyline(it, map!!)
                     }
@@ -173,7 +174,7 @@ class CourierMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                     GoogleDirectionAPI.fetchDistance(
                         locationFromLatLngString,
                         locationToLatLngString,
-                        requireContext()
+                        SharedResources.executor.getContext()!!
                     ) {
                         distance = it
                     }
@@ -181,7 +182,7 @@ class CourierMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                     GoogleDirectionAPI.fetchDuration(
                         locationFromLatLngString,
                         locationToLatLngString,
-                        requireContext()
+                        SharedResources.executor.getContext()!!
                     ) {
                         time = it
                     }

@@ -49,6 +49,7 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var lastLocation: LatLng
 
     private lateinit var locationService: LocationService
+    private lateinit var currentLocation: String
 
     private lateinit var originLocation: String
     private lateinit var destinationLocation: String
@@ -76,9 +77,9 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
         currentOrder = SharedResources.executor.getOrder()!!
         currentCourier = SharedResources.executor.getCourier()!!
 
-        configureShowDetailsButton()
         setOnBackButtonPressListener()
-        configurePlaces()
+
+        configureShowDetailsButton()
 
         var mapViewBundle: Bundle? = null
         if (savedInstanceState != null) {
@@ -87,6 +88,12 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
 
         mapView.onCreate(mapViewBundle)
         mapView.getMapAsync(this)
+        configurePlaces()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearLocationUpdater()
     }
 
     private fun setOnBackButtonPressListener() {
@@ -94,7 +101,7 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
             .onBackPressedDispatcher
             .addCallback(requireActivity(), object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    requireActivity().finish()
+                    findNavController().popBackStack()
                 }
             })
     }
@@ -103,34 +110,58 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
         mapView = requireView().findViewById(R.id.mainMap)
     }
 
+    private fun configureMainAttributes() {
+        viewModel.fetchRoute(
+            originLocation,
+            destinationLocation
+        ) { route ->
+            GoogleDirectionAPI.drawPolyline(route, map!!)
+        }
+
+        viewModel.fetchDistance(
+            originLocation,
+            destinationLocation
+        ) {
+            distance = it
+        }
+
+        viewModel.fetchDuration(
+            originLocation,
+            destinationLocation,
+        ) {
+            time = it
+        }
+    }
+
     private fun configureAndShowBottomSheetDialog(passedDistance: String) {
         val dialogDetails = BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
-
-        currentOrder.orderNumber?.let {
-            dialogDetails.setContentView(
-                PopUpDialog.Builder(requireContext())
-                    .setOrderNumber(it)
-                    .setFrom(currentOrder.placeFrom!!)
-                    .setTo(currentOrder.placeTo!!)
-                    .setPlace(currentOrder.shopName!!)
-                    .setProducts(
-                        "${currentOrder.product1},${currentOrder.product2},${currentOrder.product3}"
-                    )
-                    .setDistance(distance)
-                    .setPassedDistance(passedDistance)
-                    .setTime(time)
-                    .onButtonClick {
-                        viewModel.cancelCourierOrder(
-                            orderNumber = currentOrder.orderNumber!!,
-                            courierId = currentCourier.login.toString()
+        try {
+            currentOrder.orderNumber?.let {
+                dialogDetails.setContentView(
+                    PopUpDialog.Builder(requireContext())
+                        .setOrderNumber(it)
+                        .setFrom(currentOrder.placeFrom!!)
+                        .setTo(currentOrder.placeTo!!)
+                        .setPlace(currentOrder.shopName!!)
+                        .setProducts(
+                            "${currentOrder.product1},${currentOrder.product2},${currentOrder.product3}"
                         )
-                        dialogDetails.dismiss()
-                        findNavController().navigate(R.id.orderListFragment2)
-                    }
-                    .build()
-                    .getPopUpDialogView())
+                        .setDistance(distance)
+                        .setPassedDistance(passedDistance)
+                        .setTime(time)
+                        .onButtonClick {
+                            viewModel.cancelCourierOrder(
+                                orderNumber = currentOrder.orderNumber!!,
+                                courierId = currentCourier.login.toString()
+                            )
+                            dialogDetails.dismiss()
+                            findNavController().navigate(R.id.orderListFragment2)
+                        }
+                        .build()
+                        .getPopUpDialogView())
             }
-        dialogDetails.show()
+            dialogDetails.show()
+        } catch (e: Exception) { }
     }
 
     private fun calculateCourierDistance(courierDistance: String): String {
@@ -151,7 +182,7 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
             val dialog = ProgressDialog.show(requireContext(), "Підрахунок пройденої відстані", "")
 
             viewModel.fetchDistance(
-                "${lastLocation.latitude},${lastLocation.longitude}",
+                "${lastLocation.latitude},${lastLocation .longitude}",
                 destinationLocation,
             ) { courierDistance ->
                 dialog.dismiss()
@@ -164,88 +195,47 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     @SuppressLint("VisibleForTests")
-    private fun configureLocationListener() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) { }
-
-        val locationRequest = LocationRequest.create().apply {
-            interval = 2000
-            fastestInterval = 1000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult ?: return
-                for (location in locationResult.locations) {
-                    // TODO
-                }
-            }
-        }
-
-        val client = FusedLocationProviderClient(requireContext())
-        client.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
-    }
-
-    @SuppressLint("VisibleForTests")
     override fun onMapReady(googleMap: GoogleMap) {
         mapView.onResume()
         map = googleMap
 
-        configureLocationListener()
+        val dialog = ProgressDialog.show(requireContext(), "Встановлення позиції ...", null)
 
-        viewModel.fetchLastUserLocation { location ->
-            
-            lastLocation = LatLng(location.latitude, location.longitude)
+        viewModel.configureLocationListener() { currentLocation ->
 
-            val originLocationLatLong =
-                LatLng(currentOrder!!.latFrom!!.toDouble(), currentOrder!!.longFrom!!.toDouble())
-            val destinationLocationLatLong =
-                LatLng(currentOrder!!.latTo!!.toDouble(), currentOrder!!.longTo!!.toDouble())
+                dialog.dismiss()
 
-            map?.let {
-                it.addMarker(
-                    MarkerOptions()
-                        .position(originLocationLatLong)
-                        .title(currentOrder.placeFrom)
-                )
+                lastLocation = LatLng(currentLocation.latitude, currentLocation.longitude)
 
-                it.addMarker(
-                    MarkerOptions()
-                        .position(destinationLocationLatLong)
-                        .title(currentOrder.placeTo)
-                        .icon(getMarkerIcon("#A058A7"))
-                )
+                val originLocationLatLong =
+                    LatLng(currentOrder!!.latFrom!!.toDouble(), currentOrder!!.longFrom!!.toDouble())
+                val destinationLocationLatLong =
+                    LatLng(currentOrder!!.latTo!!.toDouble(), currentOrder!!.longTo!!.toDouble())
 
-                viewModel.fetchRoute(
-                    originLocation,
-                    destinationLocation
-                ) { route ->
-                    GoogleDirectionAPI.drawPolyline(route, map!!)
+                map?.let {
+
+                    it.addMarker(
+                        MarkerOptions()
+                            .position(currentLocation)
+                            .title(SharedResources.executor.getCourier()!!.name)
+                            .icon(getMarkerIcon("#00FF00")))
+
+
+                    it.addMarker(
+                        MarkerOptions()
+                            .position(originLocationLatLong)
+                            .title(currentOrder.placeFrom)
+                    )
+
+                    it.addMarker(
+                        MarkerOptions()
+                            .position(destinationLocationLatLong)
+                            .title(currentOrder.placeTo)
+                            .icon(getMarkerIcon("#A058A7"))
+                    )
+
+                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoom));
                 }
-
-                viewModel.fetchDistance(
-                    originLocation,
-                    destinationLocation
-                ) {
-                    distance = it
-                }
-
-                viewModel.fetchDuration(
-                    originLocation,
-                    destinationLocation,
-                ) {
-                    time = it
-                }
-
-                it.moveCamera(CameraUpdateFactory.newLatLngZoom(originLocationLatLong, zoom));
-            }
         }
     }
 
@@ -253,6 +243,8 @@ class OrderMapFragment : Fragment(), OnMapReadyCallback {
         viewModel.fetchOriginAndDestinationFromOrder { orderPlaces ->
             originLocation = orderPlaces.originLocation
             destinationLocation = orderPlaces.destinationLocation
+
+            configureMainAttributes()
         }
     }
 }

@@ -10,12 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.findFragment
 import com.example.graduationproject.R
 import com.example.graduationproject.components.sharedResources.SharedResources
 import com.example.graduationproject.core.Constants
-import com.example.graduationproject.core.Constants.Companion.CURRENT_COURIER
-import com.example.graduationproject.model.Courier
 
 class ProfileFragment : Fragment() {
 
@@ -28,6 +25,7 @@ class ProfileFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
+    @Deprecated("Deprecated in Java")
     @SuppressLint("CommitPrefEdits", "SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -43,7 +41,11 @@ class ProfileFragment : Fragment() {
 
         val btnLogout = requireView().findViewById<Button>(R.id.btnLogout)
         btnLogout.setOnClickListener {
-            val preferences = requireContext().getSharedPreferences(Constants.USER_DATA_STORAGE, Context.MODE_PRIVATE)
+            val preferences =
+                SharedResources.executor.getContext()!!.getSharedPreferences(
+                    Constants.USER_DATA_STORAGE, Context.MODE_PRIVATE
+                )
+
             preferences.edit().clear().apply()
             requireActivity().finish()
         }

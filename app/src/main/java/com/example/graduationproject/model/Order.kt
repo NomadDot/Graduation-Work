@@ -16,5 +16,7 @@ data class Order(
     var product2: String? = null,
     var product3: String? = null,
     var shopName: String? = null,
-    var status: String? = null
+    var status: String? = null,
+    var distance: String? = null,
+    var courier: String? = null
 ) : Parcelable

@@ -9,11 +9,12 @@
     <string name="password">Пароль</string>
     <string name="log_in">Увійти</string>
     <string name="register">Зареєструватися</string>
-    <string name="couriers_list">Список кур\'єрів</string>
+    <string name="couriers_list">Кур\'єри</string>
     <string name="map">Загальна карта</string>
     <string name="profile">Профіль</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="logout">Вийти з аккаунту</string>
     <string name="list_of_orders">Замовлення</string>
+    <string name="history_of_orders">Історія замовлень</string>
 </resources>
